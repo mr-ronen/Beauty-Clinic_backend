@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BeautyClinicApi.Models;
 using BeautyClinicApi.Data;
-using System.Linq;
+using BeautyClinicApi.DTOs;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using BCrypt.Net;
-
-
 
 namespace BeautyClinicApi.Controllers
 {
@@ -24,32 +21,39 @@ namespace BeautyClinicApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] User userModel)
+        public async Task<IActionResult> RegisterUser([FromBody] UserDTO userDTO)
         {
             // Basic validation
-            if (userModel == null)
+            if (userDTO == null)
             {
                 return BadRequest("User data is required.");
             }
 
             // Check for unique username and email
-            var userExists = await _context.Users.AnyAsync(u => u.Username == userModel.Username || u.Email == userModel.Email);
+            var userExists = await _context.Users.AnyAsync(u => u.Username == userDTO.Username || u.Email == userDTO.Email);
             if (userExists)
             {
                 return BadRequest("Username or email already in use.");
             }
 
-            // Validate password criteria (6 characters,at least 1 number)
-            if (!IsValidPassword(userModel.Password))
+            // Validate password criteria (6 characters, at least 1 number)
+            if (!IsValidPassword(userDTO.Password))
             {
                 return BadRequest("Password does not meet the criteria.");
             }
 
-            // Hash the password
-            userModel.Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
+            var user = new User
+            {
+                Username = userDTO.Username,
+                Email = userDTO.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password), 
+                FullName = userDTO.FullName,
+                Role = userDTO.Role,
+                ProfilePhoto = userDTO.ProfilePhoto
+            };
 
             // Save the user to the database
-            _context.Users.Add(userModel);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "Registration successful" });

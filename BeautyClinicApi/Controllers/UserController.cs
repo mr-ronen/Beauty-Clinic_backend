@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using BeautyClinicApi.DTOs;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BeautyClinicApi.DTOs;
 using BeautyClinicApi.Interfaces;
 using BeautyClinicApi.Models;
-using Microsoft.AspNetCore.Http;
+using BeautyClinicApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using BeautyClinicApi.Data;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace BeautyClinicApi.Controllers
 {
@@ -15,20 +11,30 @@ namespace BeautyClinicApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepository;   
-
+        private readonly IUserRepository _userRepository;
 
         public UserController(IUserRepository userRepository)
         {
-
             _userRepository = userRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            return Ok(_userRepository.GetAll());
+            var users = _userRepository.GetAll();
+            var userDTOs = users.Select(user => new UserDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role,
+                ProfilePhoto = user.ProfilePhoto ,
+                // Map Orders and Appointments if needed, and they have a corresponding DTO
+                // Orders = user.Orders.Select(order => new OrderDTO { ... }).ToList(),
+                // Appointments = user.Appointments.Select(appointment => new AppointmentDTO { ... }).ToList(),
+            }).ToList();
+
+            return Ok(userDTOs);
         }
 
         [HttpGet("{id}")]
@@ -36,36 +42,94 @@ namespace BeautyClinicApi.Controllers
         {
             var user = _userRepository.GetById(id);
             if (user == null) return NotFound();
-            return Ok(user);
+
+            var userDTO = new UserDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role,
+                ProfilePhoto = user.ProfilePhoto,
+            };
+
+            return Ok(userDTO);
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public IActionResult CreateUser([FromBody] UserDTO userDTO)
         {
+            var user = new User
+            {
+                Username = userDTO.Username,
+                Password = new PasswordHasher<User>().HashPassword(null, userDTO.Password),
+                Email = userDTO.Email,
+                FullName = userDTO.FullName,
+                Role = userDTO.Role,
+                ProfilePhoto = userDTO.ProfilePhoto,
+            };
+
             _userRepository.Add(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, user);
+            
+
+            // Do not return the user directly, map it to UserDTO (excluding sensitive fields)
+            var createdUserDTO = new UserDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role,
+                ProfilePhoto = user.ProfilePhoto,
+                // Map nested collections if necessary
+            };
+
+            return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, createdUserDTO);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
+
+        public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
         {
-            if (id != user.UserId) return BadRequest();
+            var user = _userRepository.GetById(id);
+            if (user == null) return NotFound();
+
+            user.Username = userDTO.Username;
+            // Do not update Password here. Consider a separate method for password update
+            user.Email = userDTO.Email;
+            user.FullName = userDTO.FullName;
+            user.Role = userDTO.Role;
+            user.ProfilePhoto = userDTO.ProfilePhoto;
+
             _userRepository.Update(user);
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
+            var user = _userRepository.GetById(id);
+            if (user == null) return NotFound();
+
             _userRepository.Delete(id);
+
             return NoContent();
         }
 
         [HttpGet("search")]
-        public IActionResult SearchUsers(string username = null, string fullname = null, string role = null)
+        public IActionResult SearchUsers(string username, string fullName, string role)
         {
-            var users = _userRepository.SearchUsers(username, fullname, role);
-            return Ok(users);
+            var users = _userRepository.SearchUsers(username, fullName, role);
+            var userDTOs = users.Select(user => new UserDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role,
+                ProfilePhoto = user.ProfilePhoto,
+                // Map Orders and Appointments if necessary
+            }).ToList();
+
+            return Ok(userDTOs);
         }
     }
 }

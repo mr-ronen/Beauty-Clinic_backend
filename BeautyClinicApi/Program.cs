@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using BeautyClinicApi.Profiles;
 using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +41,6 @@ builder.Services.AddCors(options =>
         builder => builder.WithOrigins("http://example.com"));
 });
 
-builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

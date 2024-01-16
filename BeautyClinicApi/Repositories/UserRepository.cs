@@ -29,6 +29,8 @@ namespace BeautyClinicApi.Repositories
             _context.SaveChanges();
         }
 
+        
+
         public void Update(User user)
         {
             _context.Users.Update(user);
@@ -44,6 +46,7 @@ namespace BeautyClinicApi.Repositories
                 _context.SaveChanges();
             }
         }
+
         public IEnumerable<User> SearchUsers(string username, string fullname, string role)
         {
             var query = _context.Users.AsQueryable();
@@ -65,7 +68,5 @@ namespace BeautyClinicApi.Repositories
 
             return query.ToList();
         }
-
-        
     }
 }
