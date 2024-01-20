@@ -11,6 +11,7 @@
         public int OrderNumber { get; set; }
 
 
-        public ICollection<OrderDetail> OrderDetails { get; set; }
+        // Add a property for a single OrderDetail
+        public OrderDetail OrderDetail { get; set; }
     }
 }

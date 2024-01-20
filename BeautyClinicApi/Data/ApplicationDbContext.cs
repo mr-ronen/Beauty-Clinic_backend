@@ -19,8 +19,7 @@ namespace BeautyClinicApi.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<CategoryProduct> CategoryProduct { get; set; }
-        public DbSet<OrderDetailProduct> OrderDetailProduct { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,34 +30,10 @@ namespace BeautyClinicApi.Data
                 .Property(u => u.ProfilePhoto)
                 .IsRequired(false); // This makes the column nullable
 
-            //primary key for CategoryProduct
-            modelBuilder.Entity<CategoryProduct>()
-                .HasKey(cp => new { cp.CategoryId, cp.ProductId });
+           
+       
 
-            // Configure the foreign key for CategoryProduct
-            modelBuilder.Entity<CategoryProduct>()
-                .HasOne(cp => cp.Category)
-                .WithMany(c => c.CategoryProducts)
-                .HasForeignKey(cp => cp.CategoryId);
-
-            // primary key for OrderDetailProduct is also  join table.
-            modelBuilder.Entity<OrderDetailProduct>()
-                .HasKey(odp => new { odp.OrderDetailId, odp.ProductId });
-
-            modelBuilder.Entity<OrderDetailProduct>()
-            .HasOne(odp => odp.Product)
-            .WithMany()
-            .HasForeignKey(odp => odp.ProductId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<OrderDetail>()
-            .HasOne(od => od.Product)
-            .WithMany()
-            .HasForeignKey(od => od.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-
-
+        
 
 
         }
