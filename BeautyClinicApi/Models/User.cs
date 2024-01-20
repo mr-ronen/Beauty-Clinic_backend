@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BeautyClinicApi.Models
@@ -18,9 +19,10 @@ namespace BeautyClinicApi.Models
         [Required]
        
         public string FullName { get; set; }
-        public string Role { get; set; }
+        [DefaultValue("Client")]
+        public string Role { get; set; } = "Client";
 
-        public byte[]? ProfilePhoto { get; set; }
+        public byte[]? ProfilePhoto { get; set; } = null;
 
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Appointment>? Appointments { get; set; }

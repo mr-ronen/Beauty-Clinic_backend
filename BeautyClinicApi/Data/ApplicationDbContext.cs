@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#nullable disable
+using Microsoft.EntityFrameworkCore;
 using BeautyClinicApi.Models;
 
 namespace BeautyClinicApi.Data
@@ -25,6 +26,7 @@ namespace BeautyClinicApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
             modelBuilder.Entity<User>()
                 .Property(u => u.ProfilePhoto)
                 .IsRequired(false); // This makes the column nullable
@@ -39,28 +41,25 @@ namespace BeautyClinicApi.Data
                 .WithMany(c => c.CategoryProducts)
                 .HasForeignKey(cp => cp.CategoryId);
 
-            modelBuilder.Entity<CategoryProduct>()
-                .HasOne(cp => cp.Product)
-                .WithMany(p => p.CategoryProducts)
-                .HasForeignKey(cp => cp.ProductId);
-
-
             // primary key for OrderDetailProduct is also  join table.
             modelBuilder.Entity<OrderDetailProduct>()
                 .HasKey(odp => new { odp.OrderDetailId, odp.ProductId });
 
-            // many-to-many relationship between OrderDetails and Products
             modelBuilder.Entity<OrderDetailProduct>()
-                .HasOne(odp => odp.OrderDetail)
-                .WithMany(od => od.OrderDetailProducts)
-                .HasForeignKey(odp => odp.OrderDetailId)
-                .OnDelete(DeleteBehavior.NoAction); // Specify ON DELETE NO ACTION
+            .HasOne(odp => odp.Product)
+            .WithMany()
+            .HasForeignKey(odp => odp.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<OrderDetailProduct>()
-                .HasOne(odp => odp.Product)
-                .WithMany(p => p.OrderDetailProducts)
-                .HasForeignKey(odp => odp.ProductId)
-                .OnDelete(DeleteBehavior.NoAction); // Specify ON DELETE NO ACTION
+            modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Product)
+            .WithMany()
+            .HasForeignKey(od => od.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
 
         }
     }

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Data;
 
 namespace BeautyClinicApi.Controllers
 {
@@ -48,14 +49,21 @@ namespace BeautyClinicApi.Controllers
                 return BadRequest("Password does not meet the criteria.");
             }
 
+            //when Swagger sends a "string" instead of Client, user whould be able to register as a Client by default.
+            var permissibleRoles = new List<string> { "Client", "Admin", "Worker" };  
+            var role = permissibleRoles.Contains(userDTO.Role) ? userDTO.Role : "Client";
+
+           
+
             var user = new User
             {
                 Username = userDTO.Username,
                 Email = userDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password), 
                 FullName = userDTO.FullName,
-                Role = userDTO.Role,
-                ProfilePhoto = userDTO.ProfilePhoto
+                Role = role,
+                ProfilePhoto = userDTO.ProfilePhoto ?? null,
+
             };
 
             // Save the user to the database
@@ -92,7 +100,7 @@ namespace BeautyClinicApi.Controllers
               // Add more claims as needed
              };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.Now.AddDays(Convert.ToInt32(_configuration["Jwt:ExpiryInDays"]));
 

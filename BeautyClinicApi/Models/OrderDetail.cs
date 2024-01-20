@@ -11,7 +11,7 @@
         public Order Order { get; set; }
         public Product Product { get; set; }
 
-        public ICollection<OrderDetailProduct> OrderDetailProducts { get; set; }
 
+       
     }
 }

@@ -31,12 +31,13 @@ namespace BeautyClinicApi.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryID = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: false),
-                    DiscountPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    DiscountPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,12 +66,12 @@ namespace BeautyClinicApi.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    ProfilePhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,21 +82,21 @@ namespace BeautyClinicApi.Migrations
                 name: "CategoryProduct",
                 columns: table => new
                 {
-                    CategoriesCategoryId = table.Column<int>(type: "int", nullable: false),
-                    ProductsProductId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryProduct", x => new { x.CategoriesCategoryId, x.ProductsProductId });
+                    table.PrimaryKey("PK_CategoryProduct", x => new { x.CategoryId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_CategoryProduct_Categories_CategoriesCategoryId",
-                        column: x => x.CategoriesCategoryId,
+                        name: "FK_CategoryProduct_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryProduct_Products_ProductsProductId",
-                        column: x => x.ProductsProductId,
+                        name: "FK_CategoryProduct_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
@@ -180,7 +181,8 @@ namespace BeautyClinicApi.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderId1 = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,6 +192,18 @@ namespace BeautyClinicApi.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Orders_OrderId1",
+                        column: x => x.OrderId1,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -197,21 +211,21 @@ namespace BeautyClinicApi.Migrations
                 name: "OrderDetailProduct",
                 columns: table => new
                 {
-                    OrderDetailsOrderDetailId = table.Column<int>(type: "int", nullable: false),
-                    ProductsProductId = table.Column<int>(type: "int", nullable: false)
+                    OrderDetailId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetailProduct", x => new { x.OrderDetailsOrderDetailId, x.ProductsProductId });
+                    table.PrimaryKey("PK_OrderDetailProduct", x => new { x.OrderDetailId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_OrderDetailProduct_OrderDetails_OrderDetailsOrderDetailId",
-                        column: x => x.OrderDetailsOrderDetailId,
+                        name: "FK_OrderDetailProduct_OrderDetails_OrderDetailId",
+                        column: x => x.OrderDetailId,
                         principalTable: "OrderDetails",
                         principalColumn: "OrderDetailId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderDetailProduct_Products_ProductsProductId",
-                        column: x => x.ProductsProductId,
+                        name: "FK_OrderDetailProduct_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
@@ -228,19 +242,29 @@ namespace BeautyClinicApi.Migrations
                 column: "ServicesServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryProduct_ProductsProductId",
+                name: "IX_CategoryProduct_ProductId",
                 table: "CategoryProduct",
-                column: "ProductsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetailProduct_ProductsProductId",
+                name: "IX_OrderDetailProduct_ProductId",
                 table: "OrderDetailProduct",
-                column: "ProductsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_OrderId",
                 table: "OrderDetails",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_OrderId1",
+                table: "OrderDetails",
+                column: "OrderId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_ProductId",
+                table: "OrderDetails",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
@@ -273,10 +297,10 @@ namespace BeautyClinicApi.Migrations
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Users");

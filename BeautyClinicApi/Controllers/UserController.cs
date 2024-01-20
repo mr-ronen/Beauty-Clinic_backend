@@ -4,6 +4,7 @@ using BeautyClinicApi.Models;
 using BeautyClinicApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeautyClinicApi.Controllers
 {
@@ -130,6 +131,21 @@ namespace BeautyClinicApi.Controllers
             }).ToList();
 
             return Ok(userDTOs);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("UpdateUserRole")]
+        public IActionResult UpdateUserRole([FromBody] UpdateUserRoleDto updateUserRoleDto)
+        {
+            var user = _userRepository.GetById(updateUserRoleDto.UserId);
+            if (user == null) return NotFound("User not found.");
+
+            if (updateUserRoleDto.NewRole != "admin" && updateUserRoleDto.NewRole != "worker" && updateUserRoleDto.NewRole != "client")
+                return BadRequest("Invalid role.");
+
+            user.Role = updateUserRoleDto.NewRole;
+            _userRepository.Update(user);
+
+            return Ok($"User role updated to {updateUserRoleDto.NewRole}");
         }
     }
 }

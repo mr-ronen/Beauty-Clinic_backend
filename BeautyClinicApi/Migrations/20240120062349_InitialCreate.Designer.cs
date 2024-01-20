@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeautyClinicApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231223000109_InitialCreate")]
+    [Migration("20240120062349_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -92,6 +92,21 @@ namespace BeautyClinicApi.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("BeautyClinicApi.Models.CategoryProduct", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CategoryProduct");
+                });
+
             modelBuilder.Entity("BeautyClinicApi.Models.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -134,6 +149,9 @@ namespace BeautyClinicApi.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("OrderId1")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -147,7 +165,26 @@ namespace BeautyClinicApi.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("OrderId1");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("BeautyClinicApi.Models.OrderDetailProduct", b =>
+                {
+                    b.Property<int>("OrderDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderDetailId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderDetailProduct");
                 });
 
             modelBuilder.Entity("BeautyClinicApi.Models.Product", b =>
@@ -167,6 +204,9 @@ namespace BeautyClinicApi.Migrations
 
                     b.Property<decimal>("DiscountPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -228,10 +268,10 @@ namespace BeautyClinicApi.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<byte[]>("ProfilePhoto")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Role")
@@ -240,41 +280,12 @@ namespace BeautyClinicApi.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("CategoryProduct", b =>
-                {
-                    b.Property<int>("CategoriesCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoriesCategoryId", "ProductsProductId");
-
-                    b.HasIndex("ProductsProductId");
-
-                    b.ToTable("CategoryProduct");
-                });
-
-            modelBuilder.Entity("OrderDetailProduct", b =>
-                {
-                    b.Property<int>("OrderDetailsOrderDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderDetailsOrderDetailId", "ProductsProductId");
-
-                    b.HasIndex("ProductsProductId");
-
-                    b.ToTable("OrderDetailProduct");
                 });
 
             modelBuilder.Entity("AppointmentService", b =>
@@ -303,6 +314,25 @@ namespace BeautyClinicApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BeautyClinicApi.Models.CategoryProduct", b =>
+                {
+                    b.HasOne("BeautyClinicApi.Models.Category", "Category")
+                        .WithMany("CategoryProducts")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeautyClinicApi.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("BeautyClinicApi.Models.Order", b =>
                 {
                     b.HasOne("BeautyClinicApi.Models.User", "User")
@@ -316,43 +346,51 @@ namespace BeautyClinicApi.Migrations
 
             modelBuilder.Entity("BeautyClinicApi.Models.OrderDetail", b =>
                 {
-                    b.HasOne("BeautyClinicApi.Models.Order", "Order")
+                    b.HasOne("BeautyClinicApi.Models.Order", null)
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BeautyClinicApi.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeautyClinicApi.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("CategoryProduct", b =>
+            modelBuilder.Entity("BeautyClinicApi.Models.OrderDetailProduct", b =>
                 {
-                    b.HasOne("BeautyClinicApi.Models.Category", null)
+                    b.HasOne("BeautyClinicApi.Models.OrderDetail", "OrderDetail")
                         .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
+                        .HasForeignKey("OrderDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeautyClinicApi.Models.Product", null)
+                    b.HasOne("BeautyClinicApi.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductsProductId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("OrderDetail");
+
+                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("OrderDetailProduct", b =>
+            modelBuilder.Entity("BeautyClinicApi.Models.Category", b =>
                 {
-                    b.HasOne("BeautyClinicApi.Models.OrderDetail", null)
-                        .WithMany()
-                        .HasForeignKey("OrderDetailsOrderDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeautyClinicApi.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("CategoryProducts");
                 });
 
             modelBuilder.Entity("BeautyClinicApi.Models.Order", b =>

@@ -45,6 +45,7 @@ namespace BeautyClinicApi.Repositories
                 _context.SaveChanges();
             }
         }
+
         public IEnumerable<Order> GetByUserId(int userId)
         {
             return _context.Orders.Where(o => o.UserId == userId).ToList();

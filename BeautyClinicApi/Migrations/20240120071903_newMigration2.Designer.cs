@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeautyClinicApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114075257_MakeProfilePhotoNullable")]
-    partial class MakeProfilePhotoNullable
+    [Migration("20240120071903_newMigration2")]
+    partial class newMigration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -200,6 +200,9 @@ namespace BeautyClinicApi.Migrations
                     b.Property<decimal>("DiscountPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -211,6 +214,8 @@ namespace BeautyClinicApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Products");
                 });
@@ -260,7 +265,8 @@ namespace BeautyClinicApi.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<byte[]>("ProfilePhoto")
                         .HasColumnType("varbinary(max)");
@@ -271,7 +277,8 @@ namespace BeautyClinicApi.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserId");
 
@@ -313,7 +320,7 @@ namespace BeautyClinicApi.Migrations
                         .IsRequired();
 
                     b.HasOne("BeautyClinicApi.Models.Product", "Product")
-                        .WithMany("CategoryProducts")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -345,7 +352,7 @@ namespace BeautyClinicApi.Migrations
                     b.HasOne("BeautyClinicApi.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -356,20 +363,31 @@ namespace BeautyClinicApi.Migrations
             modelBuilder.Entity("BeautyClinicApi.Models.OrderDetailProduct", b =>
                 {
                     b.HasOne("BeautyClinicApi.Models.OrderDetail", "OrderDetail")
-                        .WithMany("OrderDetailProducts")
+                        .WithMany()
                         .HasForeignKey("OrderDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeautyClinicApi.Models.Product", "Product")
-                        .WithMany("OrderDetailProducts")
+                        .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("OrderDetail");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BeautyClinicApi.Models.Product", b =>
+                {
+                    b.HasOne("BeautyClinicApi.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("BeautyClinicApi.Models.Category", b =>
@@ -380,18 +398,6 @@ namespace BeautyClinicApi.Migrations
             modelBuilder.Entity("BeautyClinicApi.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("BeautyClinicApi.Models.OrderDetail", b =>
-                {
-                    b.Navigation("OrderDetailProducts");
-                });
-
-            modelBuilder.Entity("BeautyClinicApi.Models.Product", b =>
-                {
-                    b.Navigation("CategoryProducts");
-
-                    b.Navigation("OrderDetailProducts");
                 });
 
             modelBuilder.Entity("BeautyClinicApi.Models.User", b =>
