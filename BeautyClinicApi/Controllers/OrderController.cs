@@ -60,7 +60,7 @@ namespace BeautyClinicApi.Controllers
             return Ok(orders);
         }
 
-        // GET api/order/date/{date}
+        
         [HttpGet("date/{date}")]
         public IActionResult GetOrdersByDate(DateTime date)
         {

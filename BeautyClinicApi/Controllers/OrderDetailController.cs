@@ -53,6 +53,5 @@ namespace BeautyClinicApi.Controllers
             return NoContent();
         }
 
-        // Add any additional custom methods if needed
     }
 }

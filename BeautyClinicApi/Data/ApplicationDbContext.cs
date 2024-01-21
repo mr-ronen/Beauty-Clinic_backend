@@ -11,7 +11,6 @@ namespace BeautyClinicApi.Data
         {
         }
 
-        // DbSet properties for each entity
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -27,7 +26,7 @@ namespace BeautyClinicApi.Data
 
             modelBuilder.Entity<User>()
                 .Property(u => u.ProfilePhoto)
-                .IsRequired(false); // This makes the column nullable
+                .IsRequired(false);
 
         }
 
@@ -51,7 +50,7 @@ namespace BeautyClinicApi.Data
                         new User { Username = "user1", Email = "user1@example.com", Password = "Password1", FullName = "User One", Role = "Client" },
                         new User { Username = "user2", Email = "user2@example.com", Password = "Password2", FullName = "User Two", Role = "Client" },
                         new User { Username = "admin", Email = "admin@example.com", Password = "admin2", FullName = "admin a", Role = "Admin" }
-                    // Add more users
+                    
                     );
 
                     // Seed products
@@ -59,7 +58,7 @@ namespace BeautyClinicApi.Data
                         new Product { Name = "lipstick", Price = 10.99M, Description = "Description 1", StockQuantity = 100, DiscountPrice = 2.99M, ImageUrl = "https://imgur.com/nrnix1d" },
                         new Product { Name = "brush", Price = 12.99M, Description = "Description 2", StockQuantity = 150, DiscountPrice = 3.99M, ImageUrl = "https://imgur.com/gW72U4l" },
                         new Product { Name = "brush with a pan", Price = 19.99M, Description = "Description 3", StockQuantity = 20, DiscountPrice = 4.99M, ImageUrl = "https://imgur.com/Ltv8m8Z" }
-                    // Add more products
+                    
                     );
 
                     // Seed categories
@@ -67,7 +66,7 @@ namespace BeautyClinicApi.Data
                         new Category { Name = "eyebrows", Description = "Description 1" },
                         new Category { Name = "eyelashes", Description = "Description 2" },
                         new Category { Name = "lips", Description = "Description 3" }
-                    // Add more categories
+                    
                     );
 
                     context.SaveChanges();

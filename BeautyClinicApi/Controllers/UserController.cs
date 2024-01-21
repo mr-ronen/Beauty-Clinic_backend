@@ -72,7 +72,6 @@ namespace BeautyClinicApi.Controllers
             _userRepository.Add(user);
             
 
-            // Do not return the user directly, map it to UserDTO (excluding sensitive fields)
             var createdUserDTO = new UserDTO
             {
                 Username = user.Username,
@@ -80,7 +79,6 @@ namespace BeautyClinicApi.Controllers
                 FullName = user.FullName,
                 Role = user.Role,
                 ProfilePhoto = user.ProfilePhoto,
-                // Map nested collections if necessary
             };
 
             return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, createdUserDTO);
@@ -127,7 +125,7 @@ namespace BeautyClinicApi.Controllers
                 FullName = user.FullName,
                 Role = user.Role,
                 ProfilePhoto = user.ProfilePhoto,
-                // Map Orders and Appointments if necessary
+                //Orders and Appointments
             }).ToList();
 
             return Ok(userDTOs);

@@ -97,7 +97,6 @@ namespace BeautyClinicApi.Controllers
              {
               new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
               new(ClaimTypes.Name, user.Username)
-              // Add more claims as needed
              };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
