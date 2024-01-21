@@ -30,9 +30,9 @@ namespace BeautyClinicApi.Controllers
                 FullName = user.FullName,
                 Role = user.Role,
                 ProfilePhoto = user.ProfilePhoto ,
-                // Map Orders and Appointments if needed, and they have a corresponding DTO
+                
                 // Orders = user.Orders.Select(order => new OrderDTO { ... }).ToList(),
-                // Appointments = user.Appointments.Select(appointment => new AppointmentDTO { ... }).ToList(),
+                
             }).ToList();
 
             return Ok(userDTOs);
@@ -94,7 +94,7 @@ namespace BeautyClinicApi.Controllers
             if (user == null) return NotFound();
 
             user.Username = userDTO.Username;
-            // Do not update Password here. Consider a separate method for password update
+            //  Password should be in a separate method 
             user.Email = userDTO.Email;
             user.FullName = userDTO.FullName;
             user.Role = userDTO.Role;
