@@ -1,4 +1,4 @@
-### Beauty Clinic Website
+# Beauty Clinic Website
 Description
 This website is designed to simplify the management and customer interaction for a beauty clinic. It allows for easy appointment scheduling and features an exclusive shop with high-quality beauty products. The site also provides detailed information about the clinic's services. Users can create accounts to track their appointments and orders. Future updates will enhance the appointment booking feature.
 
@@ -39,9 +39,9 @@ Once logged in, you can explore the exclusive beauty product shop, schedule appo
 
 Note: Replace [your website URL] with the actual URL where your website is hosted.
 
-# Deployment
+### Deployment
 Details on the deployment process will be added.
 
-# License
+### License
 This project is a private project, not licensed for public use.
 
