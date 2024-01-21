@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("http://localhost:3000")
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("http://localhost:3000")
+        builder => builder.WithOrigins("https://localhost:7268")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
@@ -73,7 +73,7 @@ SeedData.Initialize(app.Services);
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors();
 
 app.UseAuthentication();
 
