@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using static BeautyClinicApi.Data.ApplicationDbContext;
+using BeautyClinicApi.Interfaces;
+using BeautyClinicApi.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -48,7 +52,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("http://example.com"));
+        builder => builder.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 
@@ -65,8 +71,9 @@ if (app.Environment.IsDevelopment())
 SeedData.Initialize(app.Services);
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
-app.UseCors();
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 

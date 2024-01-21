@@ -1,7 +1,8 @@
 ﻿using BeautyClinicApi.Interfaces;
 using BeautyClinicApi.Models;
+using BeautyClinicApi.DTOs;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Linq;
 
 namespace BeautyClinicApi.Controllers
 {
@@ -19,7 +20,17 @@ namespace BeautyClinicApi.Controllers
         [HttpGet]
         public IActionResult GetAllProducts()
         {
-            return Ok(_productRepository.GetAll());
+            var products = _productRepository.GetAll();
+            var productDTOs = products.Select(p => new ProductDTO
+            {
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                StockQuantity = p.StockQuantity,
+                DiscountPrice = p.DiscountPrice,
+                ImageUrl = p.ImageUrl
+            }).ToList();
+            return Ok(productDTOs);
         }
 
         [HttpGet("{id}")]
@@ -27,27 +38,59 @@ namespace BeautyClinicApi.Controllers
         {
             var product = _productRepository.GetById(id);
             if (product == null) return NotFound();
-            return Ok(product);
+
+            var productDTO = new ProductDTO
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                DiscountPrice = product.DiscountPrice,
+                ImageUrl = product.ImageUrl
+            };
+            return Ok(productDTO);
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] Product product)
+        public IActionResult CreateProduct([FromBody] ProductDTO productDTO)
         {
+            var product = new Product
+            {
+                Name = productDTO.Name,
+                Description = productDTO.Description,
+                Price = productDTO.Price,
+                StockQuantity = productDTO.StockQuantity,
+                DiscountPrice = productDTO.DiscountPrice,
+                ImageUrl = productDTO.ImageUrl
+            };
+
             _productRepository.Add(product);
             return CreatedAtAction(nameof(GetProductById), new { id = product.ProductId }, product);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] Product product)
+        public IActionResult UpdateProduct(int id, [FromBody] ProductDTO productDTO)
         {
-            if (id != product.ProductId) return BadRequest();
-            _productRepository.Update(product);
+            var existingProduct = _productRepository.GetById(id);
+            if (existingProduct == null) return NotFound();
+
+            existingProduct.Name = productDTO.Name;
+            existingProduct.Description = productDTO.Description;
+            existingProduct.Price = productDTO.Price;
+            existingProduct.StockQuantity = productDTO.StockQuantity;
+            existingProduct.DiscountPrice = productDTO.DiscountPrice;
+            existingProduct.ImageUrl = productDTO.ImageUrl;
+
+            _productRepository.Update(existingProduct);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
+            var product = _productRepository.GetById(id);
+            if (product == null) return NotFound();
+
             _productRepository.Delete(id);
             return NoContent();
         }
