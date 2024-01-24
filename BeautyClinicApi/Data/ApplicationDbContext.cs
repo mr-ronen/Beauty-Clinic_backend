@@ -55,9 +55,9 @@ namespace BeautyClinicApi.Data
 
                     // Seed products
                     context.Products.AddRange(
-                        new Product { Name = "lipstick", Price = 10.99M, Description = "Description 1", StockQuantity = 100, DiscountPrice = 2.99M, ImageUrl = "https://imgur.com/nrnix1d" },
-                        new Product { Name = "brush", Price = 12.99M, Description = "Description 2", StockQuantity = 150, DiscountPrice = 3.99M, ImageUrl = "https://imgur.com/gW72U4l" },
-                        new Product { Name = "brush with a pan", Price = 19.99M, Description = "Description 3", StockQuantity = 20, DiscountPrice = 4.99M, ImageUrl = "https://imgur.com/Ltv8m8Z" }
+                        new Product { ProductId = 1 ,  Name = "lipstick", Price = 10.99M, Description = "Description 1", StockQuantity = 100, DiscountPrice = 2.99M, ImageUrl = "https://imgur.com/nrnix1d" },
+                        new Product { ProductId = 2 , Name = "brush", Price = 12.99M, Description = "Description 2", StockQuantity = 150, DiscountPrice = 3.99M, ImageUrl = "https://imgur.com/gW72U4l" },
+                        new Product { ProductId = 3 , Name = "brush with a pan", Price = 19.99M, Description = "Description 3", StockQuantity = 20, DiscountPrice = 4.99M, ImageUrl = "https://imgur.com/Ltv8m8Z" }
                     
                     );
 

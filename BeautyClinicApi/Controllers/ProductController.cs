@@ -23,6 +23,7 @@ namespace BeautyClinicApi.Controllers
             var products = _productRepository.GetAll();
             var productDTOs = products.Select(p => new ProductDTO
             {
+                ProductId = p.ProductId,
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
