@@ -118,8 +118,5 @@ namespace BeautyClinicApi.Controllers
             return password.Length >= 6 && Regex.IsMatch(password, @"\d");
         }
 
-
-
-
     }
 }

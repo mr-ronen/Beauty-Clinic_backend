@@ -24,6 +24,8 @@ namespace BeautyClinicApi.Models
 
         public byte[]? ProfilePhoto { get; set; } = null;
 
+        public Cart Cart { get; set; }
+
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Appointment>? Appointments { get; set; }
     }

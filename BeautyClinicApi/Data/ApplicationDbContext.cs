@@ -19,6 +19,9 @@ namespace BeautyClinicApi.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Service> Services { get; set; }
 
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,10 +58,18 @@ namespace BeautyClinicApi.Data
 
                     // Seed products
                     context.Products.AddRange(
-                        new Product { ProductId = 1 ,  Name = "lipstick", Price = 10.99M, Description = "Description 1", StockQuantity = 100, DiscountPrice = 2.99M, ImageUrl = "https://imgur.com/nrnix1d" },
-                        new Product { ProductId = 2 , Name = "brush", Price = 12.99M, Description = "Description 2", StockQuantity = 150, DiscountPrice = 3.99M, ImageUrl = "https://imgur.com/gW72U4l" },
-                        new Product { ProductId = 3 , Name = "brush with a pan", Price = 19.99M, Description = "Description 3", StockQuantity = 20, DiscountPrice = 4.99M, ImageUrl = "https://imgur.com/Ltv8m8Z" }
-                    
+                        new Product { StockQuantity = 50, Name = "lipstick", Price = 10.99M, Description = "Description 1",  DiscountPrice = 2.99M, ImageUrl = "https://i.imgur.com/nrnix1d.png" },
+                        new Product { StockQuantity = 45, Name = "brush", Price = 12.99M, Description = "Description 2",  DiscountPrice = 3.99M, ImageUrl = "https://i.imgur.com/Ltv8m8Z.png" },
+                        new Product { StockQuantity = 20, Name = "brush with a pan", Price = 19.99M, Description = "Description 3",  DiscountPrice = 4.99M, ImageUrl = "https://i.imgur.com/gW72U4l.png" },
+                        new Product { StockQuantity = 45, Name = "lipstick", Price = 21.99M, Description = "Description 4",  DiscountPrice = 7.99M, ImageUrl = "https://i.imgur.com/nrnix1d.png" },
+                        new Product { StockQuantity = 55, Name = "brush", Price = 23.99M, Description = "Description 5",  DiscountPrice = 5.99M, ImageUrl = "https://i.imgur.com/Ltv8m8Z.png" },
+                        new Product { StockQuantity = 62, Name = "brush with a pan", Price = 25.99M, Description = "Description 6",  DiscountPrice = 6.99M, ImageUrl = "https://i.imgur.com/gW72U4l.png" },
+                        new Product { StockQuantity = 55, Name = "pen", Price = 3.99M, Description = "new gen pen", DiscountPrice = 0.99M, ImageUrl = "https://i.imgur.com/yXKigsum.png" },
+                        new Product { StockQuantity = 55, Name = "sharpner", Price = 4.99M, Description = "new gen sharpner", DiscountPrice = 0.99M, ImageUrl = "https://i.imgur.com/MHhuHm5m.png" },
+                        new Product { StockQuantity = 55, Name = "cream", Price = 5.99M, Description = "face cream", DiscountPrice = 0.99M, ImageUrl = "https://i.imgur.com/pfeIzqOm.png" },
+                        new Product { StockQuantity = 55, Name = "toothpicks", Price = 5.99M, Description = "for tooth", DiscountPrice = 0.99M, ImageUrl = "https://i.imgur.com/z6DpUtUm.png" },
+                        new Product { StockQuantity = 55, Name = "brush", Price = 13.99M, Description = "Description 11", DiscountPrice = 0.99M, ImageUrl = "https://i.imgur.com/Ltv8m8Z.png" }
+
                     );
 
                     // Seed categories
