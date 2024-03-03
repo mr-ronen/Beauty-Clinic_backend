@@ -88,11 +88,12 @@ namespace BeautyClinicApi.Controllers
 
             var token = GenerateJwtToken(user);
 
-            return Ok(new { token, user.Username });
+            return Ok(new { token, user.Username, user.UserId });
         }
 
         private string GenerateJwtToken(User user)
         {
+
             var claims = new List<Claim>
              {
               new(ClaimTypes.NameIdentifier, user.UserId.ToString()),

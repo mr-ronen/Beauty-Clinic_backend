@@ -109,5 +109,22 @@ namespace BeautyClinicApi.Controllers
             var products = _productRepository.GetByPriceRange(minPrice, maxPrice);
             return Ok(products);
         }
+        [HttpGet("search")]
+        public IActionResult SearchProducts(string query)
+        {
+            var searchResults = _productRepository.Search(query);
+            var productDTOs = searchResults.Select(p => new ProductDTO
+            {
+                ProductId = p.ProductId,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                StockQuantity = p.StockQuantity,
+                DiscountPrice = p.DiscountPrice,
+                ImageUrl = p.ImageUrl
+            }).ToList();
+
+            return Ok(productDTOs);
+        }
     }
 }

@@ -53,5 +53,12 @@ namespace BeautyClinicApi.Repositories
         {
             return _context.Products.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToList();
         }
+        public IEnumerable<Product> Search(string searchTerm)
+        {
+            return _context.Products
+                           .Where(p => p.Name.Contains(searchTerm)
+                                       || p.Description.Contains(searchTerm))
+                           .ToList();
+        }
     }
 }
