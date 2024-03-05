@@ -62,14 +62,17 @@ public class CartRepository : ICartRepository
         }
     }
 
-    public async Task UpdateQuantity(int cartItemId, int quantity)
+    public async Task<CartItem> UpdateQuantity(int cartItemId, int quantity)
     {
         var cartItem = await _context.CartItems.FindAsync(cartItemId);
         if (cartItem != null)
         {
             cartItem.Quantity = quantity;
             await _context.SaveChangesAsync();
+            return cartItem; // Return the updated cart item
         }
+        // Handle the case where the cart item doesn't exist
+        return null;
     }
 
     public async Task ClearCart(int userId)

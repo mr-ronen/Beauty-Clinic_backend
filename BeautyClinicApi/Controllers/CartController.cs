@@ -78,12 +78,17 @@ namespace BeautyClinicApi.Controllers
 
         // Update the quantity of a cart item
         [HttpPut("update/{cartItemId}")]
+        
         public async Task<IActionResult> UpdateCartItem(int cartItemId, [FromBody] int quantity)
         {
             try
             {
-                await _cartRepository.UpdateQuantity(cartItemId, quantity);
-                return Ok("Cart item quantity updated");
+                var updatedCartItem = await _cartRepository.UpdateQuantity(cartItemId, quantity);
+                if (updatedCartItem == null)
+                {
+                    return NotFound("Cart item not found.");
+                }
+                return Ok(updatedCartItem); // Return the updated cart item
             }
             catch (Exception ex)
             {
