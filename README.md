@@ -12,22 +12,42 @@ To set up the project:
 Clone both the backend and frontend repositories.
 Follow the installation instructions in each repository to get the project running.
 Database Seeding
-To seed the database with demo data:
+To seed the database with demo data(mostly used for the products in the shop .):
 
-Install EF Core Tools:
+### Prerequisites
+Before installing the Beauty Clinic backend, you should have the following tools installed:
+- [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (includes the .NET Runtime)
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (Express edition is sufficient for local development)
+- [EF Core Tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) for database migrations (can be installed globally with `dotnet tool install --global dotnet-ef`)
 
-csharp
-Copy code
-dotnet tool install --global dotnet-ef
-Apply Migrations:
-In the root directory of the backend project, run:
+### Backend Setup
+To get the backend up and running, follow these steps:
 
-sql
-Copy code
+1. Clone the backend repository:
+   git clone <repository-url>
+Replace `<repository-url>` with the URL of the backend repository.
+
+2. Navigate to the backend project directory (where the `.csproj` file is located):
+cd path/to/backend/project
+3. Configure the database connection string in `appsettings.json` or `appsettings.Development.json`:
+```json
+"ConnectionStrings": {
+    "DefaultConnection": "Your SQL Server connection string here"
+}
+Make sure to replace "Your SQL Server connection string here" with your actual SQL Server connection string.
+Database Setup
+To initialize the database with the required schema and seed data, execute:
 dotnet ef database update
-Verify Data:
-Check the database to ensure the seed data is present.
+This command runs all migrations and should be executed in the backend project directory.
+Running the Backend
+With the database set up, start the backend application:
 
+Troubleshooting
+If migrations fail, check the connection string and ensure your SQL Server instance is running.
+In case of issues not covered here, check the backend repository's Issues tab or consult the .NET Core documentation.
+Notes
+The backend and frontend of the project are maintained in separate repositories. It is important to clone both and follow the respective installation instructions.
+This README provides guidelines for setting up the backend. For frontend setup, refer to its specific README.
 ## Usage
 To get started with the Beauty Clinic website:
 
