@@ -29,8 +29,7 @@ Replace `<repository-url>` with the URL of the backend repository.
 
 2. Navigate to the backend project directory (where the `.csproj` file is located):
 cd path/to/backend/project
-3. Configure the database connection string in `appsettings.json` or `appsettings.Development.json`:
-```json
+3. Configure the database connection string in `appsettings.json` 
 "ConnectionStrings": {
     "DefaultConnection": "Your SQL Server connection string here"
 }
