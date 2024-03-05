@@ -34,6 +34,7 @@ cd path/to/backend/project
 "ConnectionStrings": {
     "DefaultConnection": "Your SQL Server connection string here"
 }
+
 Make sure to replace "Your SQL Server connection string here" with your actual SQL Server connection string.
 Database Setup
 To initialize the database with the required schema and seed data, execute:
