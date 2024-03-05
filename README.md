@@ -33,7 +33,7 @@ To get started with the Beauty Clinic website:
 
 Registering: To create a new user account, visit the registration page at [your website URL]/UserRegistration. Fill in the required details to complete the registration process.
 
-Logging In: If you already have an account, you can log in by visiting [your website URL]/logIn. For local testing, this would typically be http://localhost:3001/logIn.
+Logging In: If you already have an account, you can log in by visiting [your website URL]/logIn. For local testing, this would typically be http://localhost:3000/logIn.
 
 Once logged in, you can explore the exclusive beauty product shop, schedule appointments, and manage your orders and appointments.
 
